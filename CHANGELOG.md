@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/KarinJS/hmr/compare/v1.0.0...v1.0.1) (2025-07-24)
+
+
+### Bug Fixes
+
+* build ([78fef17](https://github.com/KarinJS/hmr/commit/78fef17516c9985f171f139ecba184878e57510b))
+* 修复嵌套模块 ([63f18c4](https://github.com/KarinJS/hmr/commit/63f18c461ae1832e5b8d9f6578056c31afb2072e))
+
 ## 1.0.0 (2025-07-24)
 
 
