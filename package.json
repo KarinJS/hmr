@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/node-hmr",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Node.js ESM-HMR工具，自动注入--expose-internals参数",
   "type": "module",
   "main": "dist/index.js",
