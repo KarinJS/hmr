@@ -23,7 +23,8 @@
     "build": "tsc && tsdown",
     "start": "node --expose-internals ./dist/demo.js",
     "test": "node --expose-internals --import tsx ./src/demo.ts",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "pub": "npm publish --access public"
   },
   "keywords": [
     "hmr",
