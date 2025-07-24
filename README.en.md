@@ -140,6 +140,10 @@ The process works as follows:
 
 This tool is designed exclusively for ES Modules and will not work with CommonJS modules. Your project should use `"type": "module"` in package.json or `.mjs` file extensions.
 
+## Acknowledgements
+
+The implementation idea comes from Sylphy (QQ: 1393***348). We appreciate the valuable insights and technical support provided.
+
 ## Warning
 
 ⚠️ **This tool uses Node.js internal APIs and is not recommended for production use!**

@@ -142,6 +142,10 @@ constructor(files: string | string[], options?: ChokidarOptions)
 
 本工具专为 ES 模块设计，不适用于 CommonJS 模块。你的项目应该在 package.json 中使用 `"type": "module"` 或使用 `.mjs` 文件扩展名。
 
+## 致谢
+
+实现思路来自于 Sylphy (QQ: 1393***348)，感谢其提供的宝贵思路和技术支持。
+
 ## 警告
 
 ⚠️ **本工具使用 Node.js 内部 API，请勿在生产环境使用！**
