@@ -1,0 +1,48 @@
+{
+  "name": "@karinjs/node-hmr",
+  "version": "0.1.0",
+  "description": "Node.js ESM-HMR工具，自动注入--expose-internals参数",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "hmr": "dist/cli.js"
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/cli.js",
+    "dist/cli.d.ts",
+    "README.md",
+    "README.en.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc && tsdown",
+    "start": "node --expose-internals ./dist/demo.js",
+    "test": "node --expose-internals --import tsx ./src/demo.ts",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "hmr",
+    "hot",
+    "module",
+    "replacement",
+    "reload",
+    "node",
+    "typescript"
+  ],
+  "author": "shijin",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "chokidar": "^4.0.3",
+    "commander": "^14.0.0",
+    "neostandard": "^0.12.2",
+    "tsdown": "^0.13.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.4.2"
+  }
+}
