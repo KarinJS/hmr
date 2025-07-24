@@ -6,7 +6,7 @@
 import path from 'node:path'
 import chokidar from 'chokidar'
 import { EventEmitter } from 'node:events'
-import { loadCache } from './internal'
+import { findDependentModules, loadCache } from './internal'
 import type { FSWatcher, ChokidarOptions } from 'chokidar'
 
 /**
@@ -22,6 +22,7 @@ const fileUrlPrefix = process.platform === 'win32' ? 'file:///' : 'file://'
  * HMR 模块
  */
 export class HMRModule extends EventEmitter {
+  #exclude: string[]
   #watcher: FSWatcher
 
   /**
@@ -29,23 +30,24 @@ export class HMRModule extends EventEmitter {
    * @param files 模块文件路径
    * @param options 选项
    */
-  constructor (files: string | string[], options: ChokidarOptions = {
+  constructor (files: string | string[], options: ChokidarOptions & { exclude?: string[] } = {
     ignoreInitial: true,
     ignored: /(^|[/\\])\../,
   }) {
     super()
+    this.#exclude = options.exclude || []
     this.#watcher = chokidar.watch(files, options)
     this.#init()
   }
 
   #init () {
-    this.#watcher.on('all', (event, file) => {
+    this.#watcher.on('all', async (event, file) => {
       const fileUrl = this._formatFileUrl(file)
 
       if (event === 'change' || event === 'unlink') {
         if (loadCache.has(fileUrl)) {
-          loadCache.delete(fileUrl)
-          this.emit('change', fileUrl, true)
+          const result = await this.#clearCache(fileUrl)
+          this.emit('change', fileUrl, result)
           return
         }
       }
@@ -110,5 +112,20 @@ export class HMRModule extends EventEmitter {
 
   getWatched (): Record<string, string[]> {
     return this.#watcher.getWatched()
+  }
+
+  /**
+   * 清理缓存
+   * @param fileUrl 模块文件路径
+   */
+  async #clearCache (fileUrl: string) {
+    const isHas = loadCache.has(fileUrl)
+    if (!isHas) return []
+
+    const result = await findDependentModules(fileUrl, this.#exclude)
+    /** 加上当前文件本身 */
+    result.unshift(fileUrl)
+    result.forEach(key => loadCache.delete(key))
+    return result
   }
 }

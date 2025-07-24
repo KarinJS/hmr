@@ -55,33 +55,36 @@ node --expose-internals --import tsx ./your-file.ts
 You can also use the HMR API directly in your code:
 
 ```typescript
-import { HMRModule } from '@karinjs/node-hmr';
+import { HMRModule } from "@karinjs/node-hmr";
 
 // Create an HMR instance to monitor file changes
-const hmr = new HMRModule('./src/**/*.{js,ts}');
+const hmr = new HMRModule("./src", {
+  // Exclude modules in node_modules and test directories
+  exclude: ['node_modules', 'test']
+});
 
 // Listen for file change events
-hmr.on('change', async (fileUrl, isCached) => {
+hmr.on("change", async (fileUrl, isCached) => {
   console.log(`File changed: ${fileUrl}`);
   if (isCached) {
-    console.log('Module has been removed from cache, can be reimported');
-    
+    console.log("Module has been removed from cache, can be reimported");
+
     try {
       // Reimport the module
       const module = await import(fileUrl);
-      console.log('Successfully reimported:', Object.keys(module));
+      console.log("Successfully reimported:", Object.keys(module));
     } catch (error) {
-      console.error('Failed to reimport:', error);
+      console.error("Failed to reimport:", error);
     }
   }
 });
 
 // Listen for other events
-hmr.on('add', (fileUrl) => {
+hmr.on("add", (fileUrl) => {
   console.log(`File added: ${fileUrl}`);
 });
 
-hmr.on('unlink', (fileUrl) => {
+hmr.on("unlink", (fileUrl) => {
   console.log(`File deleted: ${fileUrl}`);
 });
 
@@ -100,11 +103,12 @@ The `HMRModule` class extends `EventEmitter` and provides the following methods 
 #### Constructor
 
 ```typescript
-constructor(files: string | string[], options?: ChokidarOptions)
+constructor(files: string | string[], options?: ChokidarOptions & { exclude?: string[] })
 ```
 
 - `files`: File paths to monitor, supports glob patterns
 - `options`: Chokidar watch options, defaults to `{ ignoreInitial: true, ignored: /(^|[/\\])\./ }`
+  - `exclude`: Array of module paths to exclude from dependency analysis during hot reloading
 
 #### Methods
 
@@ -142,7 +146,7 @@ This tool is designed exclusively for ES Modules and will not work with CommonJS
 
 ## Acknowledgements
 
-The implementation idea comes from Sylphy (QQ: 1393***348). We appreciate the valuable insights and technical support provided.
+The implementation idea comes from Sylphy (QQ: 1393\*\*\*348). We appreciate the valuable insights and technical support provided.
 
 ## Warning
 
@@ -157,4 +161,4 @@ The implementation idea comes from Sylphy (QQ: 1393***348). We appreciate the va
 
 ## License
 
-MIT 
+MIT

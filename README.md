@@ -57,33 +57,36 @@ node --expose-internals --import tsx ./your-file.ts
 你也可以在代码中直接使用 HMR API：
 
 ```typescript
-import { HMRModule } from '@karinjs/node-hmr';
+import { HMRModule } from "@karinjs/node-hmr";
 
 // 创建 HMR 实例，监听文件变化
-const hmr = new HMRModule('./src/**/*.{js,ts}');
+const hmr = new HMRModule("./src", {
+  // 排除node_modules和test目录中的模块
+  exclude: ['node_modules', 'test']
+});
 
 // 监听文件变更事件
-hmr.on('change', async (fileUrl, isCached) => {
+hmr.on("change", async (fileUrl, isCached) => {
   console.log(`文件变更: ${fileUrl}`);
   if (isCached) {
-    console.log('模块已从缓存中删除，可以重新导入');
-    
+    console.log("模块已从缓存中删除，可以重新导入");
+
     try {
       // 重新导入模块
       const module = await import(fileUrl);
-      console.log('重新导入成功:', Object.keys(module));
+      console.log("重新导入成功:", Object.keys(module));
     } catch (error) {
-      console.error('重新导入失败:', error);
+      console.error("重新导入失败:", error);
     }
   }
 });
 
 // 监听其他事件
-hmr.on('add', (fileUrl) => {
+hmr.on("add", (fileUrl) => {
   console.log(`文件添加: ${fileUrl}`);
 });
 
-hmr.on('unlink', (fileUrl) => {
+hmr.on("unlink", (fileUrl) => {
   console.log(`文件删除: ${fileUrl}`);
 });
 
@@ -102,11 +105,12 @@ console.log(hmr.getWatched());
 #### 构造函数
 
 ```typescript
-constructor(files: string | string[], options?: ChokidarOptions)
+constructor(files: string | string[], options?: ChokidarOptions & { exclude?: string[] })
 ```
 
 - `files`: 要监控的文件路径，支持 glob 模式
 - `options`: chokidar 监听选项，默认值为 `{ ignoreInitial: true, ignored: /(^|[/\\])\./ }`
+  - `exclude`: 排除的模块路径数组，这些模块不会被包含在热更新的依赖分析中
 
 #### 方法
 
@@ -144,7 +148,7 @@ constructor(files: string | string[], options?: ChokidarOptions)
 
 ## 致谢
 
-实现思路来自于 Sylphy (QQ: 1393***348)，感谢其提供的宝贵思路和技术支持。
+实现思路来自于 Sylphy (QQ: 1393\*\*\*348)，感谢其提供的宝贵思路和技术支持。
 
 ## 警告
 
